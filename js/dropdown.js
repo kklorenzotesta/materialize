@@ -28,10 +28,6 @@
       this.el.M_Dropdown = this;
       Dropdown._dropdowns.push(this);
 
-      this.id = M.getIdFromTrigger(el);
-      this.dropdownEl = document.getElementById(this.id);
-      this.$dropdownEl = $(this.dropdownEl);
-
       /**
        * Options for the dropdown
        * @member Dropdown#options
@@ -50,6 +46,16 @@
        * @prop {Function} onCloseEnd - Function called when dropdown finishes closing
        */
       this.options = $.extend({}, Dropdown.defaults, options);
+
+      var context = !!this.options.context ? this.options.context : document;
+
+      this.id = M.getIdFromTrigger(el);
+      if (typeof context.getElementById === 'function') {
+        this.dropdownEl = context.getElementById(this.id);
+      } else {
+        this.dropdownEl = context.querySelector('#' + this.id);
+      }
+      this.$dropdownEl = $(this.dropdownEl);
 
       /**
        * Describes open/close state of dropdown
@@ -529,7 +535,7 @@
     _placeDropdown() {
       // Countainer here will be closest ancestor with overflow: hidden
       let closestOverflowParent = M.getClosestAncestor(this.dropdownEl, (ancestor) => {
-        return $(ancestor).css('overflow') !== 'visible';
+        return ancestor instanceof Element && $(ancestor).css('overflow') !== 'visible';
       });
       // Fallback
       if (!closestOverflowParent) {

@@ -130,7 +130,7 @@ M.AutoInit = function(context) {
 
   for (let pluginName in registry) {
     let plugin = M[pluginName];
-    plugin.init(registry[pluginName]);
+    plugin.init(registry[pluginName], { context: root });
   }
 };
 
