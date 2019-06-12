@@ -98,7 +98,8 @@
       this._handleModalCloseClickBound = this._handleModalCloseClick.bind(this);
 
       if (Modal._count === 1) {
-        document.body.addEventListener('click', this._handleTriggerClick);
+        let context = !!this.options.context ? this.options.context : document.body;
+        context.addEventListener('click', this._handleTriggerClick);
       }
       this.$overlay[0].addEventListener('click', this._handleOverlayClickBound);
       this.el.addEventListener('click', this._handleModalCloseClickBound);
@@ -109,7 +110,8 @@
      */
     _removeEventHandlers() {
       if (Modal._count === 0) {
-        document.body.removeEventListener('click', this._handleTriggerClick);
+        let context = !!this.options.context ? this.options.context : document.body;
+        context.removeEventListener('click', this._handleTriggerClick);
       }
       this.$overlay[0].removeEventListener('click', this._handleOverlayClickBound);
       this.el.removeEventListener('click', this._handleModalCloseClickBound);
@@ -123,7 +125,13 @@
       let $trigger = $(e.target).closest('.modal-trigger');
       if ($trigger.length) {
         let modalId = M.getIdFromTrigger($trigger[0]);
-        let modalInstance = document.getElementById(modalId).M_Modal;
+        var modalInstance;
+        if (typeof this.getElementById === 'function') {
+          modalInstance = this.getElementById(modalId);
+        } else {
+          modalInstance = this.querySelector('#' + modalId);
+        }
+        modalInstance = modalInstance.M_Modal;
         if (modalInstance) {
           modalInstance.open($trigger);
         }
