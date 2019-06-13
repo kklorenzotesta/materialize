@@ -2253,9 +2253,7 @@ abbr[title] {
   /* 1 */
   text-decoration: underline;
   /* 2 */
-  -webkit-text-decoration: underline dotted;
-     -moz-text-decoration: underline dotted;
-          text-decoration: underline dotted;
+  text-decoration: underline dotted;
   /* 2 */
 }
 
@@ -6112,7 +6110,7 @@ label {
 ::-moz-placeholder {
   color: #d1d1d1;
 }
-::-ms-input-placeholder {
+:-ms-input-placeholder {
   color: #d1d1d1;
 }
 ::placeholder {

@@ -1190,7 +1190,7 @@ M.AutoInit = function (context) {
 
   for (var pluginName in registry) {
     var plugin = M[pluginName];
-    plugin.init(registry[pluginName], { "context": root });
+    plugin.init(registry[pluginName], { context: root });
   }
 };
 
@@ -2284,7 +2284,7 @@ $jscomp.polyfill = function (e, r, p, m) {
       var context = !!_this9.options.context ? _this9.options.context : document;
 
       _this9.id = M.getIdFromTrigger(el);
-      if (typeof context.getElementById === "function") {
+      if (typeof context.getElementById === 'function') {
         _this9.dropdownEl = context.getElementById(_this9.id);
       } else {
         _this9.dropdownEl = context.querySelector('#' + _this9.id);
@@ -2999,7 +2999,8 @@ $jscomp.polyfill = function (e, r, p, m) {
         this._handleModalCloseClickBound = this._handleModalCloseClick.bind(this);
 
         if (Modal._count === 1) {
-          document.body.addEventListener('click', this._handleTriggerClick);
+          var context = !!this.options.context ? this.options.context : document.body;
+          context.addEventListener('click', this._handleTriggerClick);
         }
         this.$overlay[0].addEventListener('click', this._handleOverlayClickBound);
         this.el.addEventListener('click', this._handleModalCloseClickBound);
@@ -3013,7 +3014,8 @@ $jscomp.polyfill = function (e, r, p, m) {
       key: "_removeEventHandlers",
       value: function _removeEventHandlers() {
         if (Modal._count === 0) {
-          document.body.removeEventListener('click', this._handleTriggerClick);
+          var context = !!this.options.context ? this.options.context : document.body;
+          context.removeEventListener('click', this._handleTriggerClick);
         }
         this.$overlay[0].removeEventListener('click', this._handleOverlayClickBound);
         this.el.removeEventListener('click', this._handleModalCloseClickBound);
@@ -3030,7 +3032,13 @@ $jscomp.polyfill = function (e, r, p, m) {
         var $trigger = $(e.target).closest('.modal-trigger');
         if ($trigger.length) {
           var modalId = M.getIdFromTrigger($trigger[0]);
-          var modalInstance = document.getElementById(modalId).M_Modal;
+          var modalInstance;
+          if (typeof this.getElementById === 'function') {
+            modalInstance = this.getElementById(modalId);
+          } else {
+            modalInstance = this.querySelector('#' + modalId);
+          }
+          modalInstance = modalInstance.M_Modal;
           if (modalInstance) {
             modalInstance.open($trigger);
           }
