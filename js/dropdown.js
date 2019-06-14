@@ -28,10 +28,6 @@
       this.el.M_Dropdown = this;
       Dropdown._dropdowns.push(this);
 
-      this.id = M.getIdFromTrigger(el);
-      this.dropdownEl = document.getElementById(this.id);
-      this.$dropdownEl = $(this.dropdownEl);
-
       /**
        * Options for the dropdown
        * @member Dropdown#options
@@ -50,6 +46,15 @@
        * @prop {Function} onCloseEnd - Function called when dropdown finishes closing
        */
       this.options = $.extend({}, Dropdown.defaults, options);
+
+      this.id = M.getIdFromTrigger(el);
+      let context = !!this.options.context ? this.options.context : document;
+      if (typeof context.getElementById === 'function') {
+        this.dropdownEl = context.getElementById(this.id);
+      } else {
+        this.dropdownEl = context.querySelector('#' + this.id);
+      }
+      this.$dropdownEl = $(this.dropdownEl);
 
       /**
        * Describes open/close state of dropdown
