@@ -1,5 +1,5 @@
 /*!
- * Materialize v1.0.0 (http://materializecss.com)
+ * Materialize vundefined (http://materializecss.com)
  * Copyright 2014-2017 Materialize
  * MIT License (https://raw.githubusercontent.com/Dogfalo/materialize/master/LICENSE)
  */
@@ -2253,9 +2253,7 @@ abbr[title] {
   /* 1 */
   text-decoration: underline;
   /* 2 */
-  -webkit-text-decoration: underline dotted;
-     -moz-text-decoration: underline dotted;
-          text-decoration: underline dotted;
+  text-decoration: underline dotted;
   /* 2 */
 }
 
@@ -6111,9 +6109,6 @@ label {
   color: #d1d1d1;
 }
 :-ms-input-placeholder {
-  color: #d1d1d1;
-}
-::-ms-input-placeholder {
   color: #d1d1d1;
 }
 ::placeholder {

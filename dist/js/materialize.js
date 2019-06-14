@@ -1,5 +1,5 @@
 /*!
- * Materialize v1.0.0 (http://materializecss.com)
+ * Materialize vundefined (http://materializecss.com)
  * Copyright 2014-2017 Materialize
  * MIT License (https://raw.githubusercontent.com/Dogfalo/materialize/master/LICENSE)
  */
@@ -1190,7 +1190,7 @@ M.AutoInit = function (context) {
 
   for (var pluginName in registry) {
     var plugin = M[pluginName];
-    plugin.init(registry[pluginName]);
+    plugin.init(registry[pluginName], { context: root });
   }
 };
 
@@ -2245,10 +2245,6 @@ $jscomp.polyfill = function (e, r, p, m) {
       _this9.el.M_Dropdown = _this9;
       Dropdown._dropdowns.push(_this9);
 
-      _this9.id = M.getIdFromTrigger(el);
-      _this9.dropdownEl = document.getElementById(_this9.id);
-      _this9.$dropdownEl = $(_this9.dropdownEl);
-
       /**
        * Options for the dropdown
        * @member Dropdown#options
@@ -2267,6 +2263,15 @@ $jscomp.polyfill = function (e, r, p, m) {
        * @prop {Function} onCloseEnd - Function called when dropdown finishes closing
        */
       _this9.options = $.extend({}, Dropdown.defaults, options);
+
+      _this9.id = M.getIdFromTrigger(el);
+      var context = !!_this9.options.context ? _this9.options.context : document;
+      if (typeof context.getElementById === 'function') {
+        _this9.dropdownEl = context.getElementById(_this9.id);
+      } else {
+        _this9.dropdownEl = context.querySelector('#' + _this9.id);
+      }
+      _this9.$dropdownEl = $(_this9.dropdownEl);
 
       /**
        * Describes open/close state of dropdown
@@ -2956,7 +2961,8 @@ $jscomp.polyfill = function (e, r, p, m) {
         this._handleModalCloseClickBound = this._handleModalCloseClick.bind(this);
 
         if (Modal._count === 1) {
-          document.body.addEventListener('click', this._handleTriggerClick);
+          var context = !!this.options.context ? this.options.context : document.body;
+          context.addEventListener('click', this._handleTriggerClick);
         }
         this.$overlay[0].addEventListener('click', this._handleOverlayClickBound);
         this.el.addEventListener('click', this._handleModalCloseClickBound);
@@ -2970,7 +2976,8 @@ $jscomp.polyfill = function (e, r, p, m) {
       key: "_removeEventHandlers",
       value: function _removeEventHandlers() {
         if (Modal._count === 0) {
-          document.body.removeEventListener('click', this._handleTriggerClick);
+          var context = !!this.options.context ? this.options.context : document.body;
+          context.removeEventListener('click', this._handleTriggerClick);
         }
         this.$overlay[0].removeEventListener('click', this._handleOverlayClickBound);
         this.el.removeEventListener('click', this._handleModalCloseClickBound);
@@ -2987,7 +2994,13 @@ $jscomp.polyfill = function (e, r, p, m) {
         var $trigger = $(e.target).closest('.modal-trigger');
         if ($trigger.length) {
           var modalId = M.getIdFromTrigger($trigger[0]);
-          var modalInstance = document.getElementById(modalId).M_Modal;
+          var modalInstance;
+          if (typeof this.getElementById === 'function') {
+            modalInstance = this.getElementById(modalId);
+          } else {
+            modalInstance = this.querySelector('#' + modalId);
+          }
+          modalInstance = modalInstance.M_Modal;
           if (modalInstance) {
             modalInstance.open($trigger);
           }
