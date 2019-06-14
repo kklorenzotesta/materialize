@@ -535,8 +535,12 @@
     _placeDropdown() {
       // Countainer here will be closest ancestor with overflow: hidden
       let closestOverflowParent = M.getClosestAncestor(this.dropdownEl, (ancestor) => {
-        return ancestor instanceof Element && $(ancestor).css('overflow') !== 'visible';
+        return (ancestor instanceof Element && $(ancestor).css('overflow') !== 'visible')
+                || (ancestor === this.options.context);
       });
+      if (closestOverflowParent === this.options.context) {
+        closestOverflowParent = this.dropdownEl.parentNode;
+      }
       // Fallback
       if (!closestOverflowParent) {
         closestOverflowParent = !!this.dropdownEl.offsetParent
